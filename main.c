@@ -6,6 +6,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+static struct icontext base_context;
+static struct icontext fiber_context;
+
+static struct iatomic exit_condition = {0};
+
 int fib(int n) {
   if (n <= 1)
     return n;
@@ -20,23 +25,24 @@ void fiber() {
 
 int main() {
 
-  //  char data[1024];
-  //  void* sp = istack_get_pointer(data, 1024);
+    char data[1024];
+    void* sp = istack_get_pointer(data, 1024);
 
-  //  struct icontext c;
+    icontext_get(&base_context);
 
-  //  c.r_return = (void *)fiber;
-  //  c.r_stack = sp;
+    printf("hello, world!\n");
 
-  //  icontext_set(&c);
+    if(iatomic_equal(&exit_condition, 0)) {
+        iatomic_increment(&exit_condition);
+        icontext_set(&base_context);
+    }
+//  struct iatomic a = {1};
 
-  struct iatomic a = {1};
+//  iatomic_add(&a, 1);
 
-  iatomic_add(&a, 1);
+//  int r = iatomic_equal(&a, 2);
 
-  int r = iatomic_equal(&a, 2);
+//  iatomic_increment(&a);
 
-  iatomic_increment(&a);
-
-  r = iatomic_equal(&a, 3);
+//  r = iatomic_equal(&a, 3);
 }
