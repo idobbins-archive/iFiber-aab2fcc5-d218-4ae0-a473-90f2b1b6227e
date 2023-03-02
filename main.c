@@ -1,5 +1,7 @@
 
-#include <context.h>
+#include <iatomic.h>
+#include <icontext.h>
+#include <istack.h>
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -12,23 +14,29 @@ int fib(int n) {
 
 void fiber() {
   printf("fib(32) = %d", fib(32));
-  exit (0);
+
+  exit(0);
 }
 
 int main() {
 
-  char data[1024];
+  //  char data[1024];
+  //  void* sp = istack_get_pointer(data, 1024);
 
-  char *sp = (char *)(data + sizeof data);
-  sp = (char *)((uintptr_t)sp & -16L);
-  sp -= 128;
+  //  struct icontext c;
 
-  volatile int a = 0;
+  //  c.r_return = (void *)fiber;
+  //  c.r_stack = sp;
 
-  struct icontext c;
+  //  icontext_set(&c);
 
-  c.r_return = (void*)fiber;
-  c.r_stack = sp;
+  struct iatomic a = {1};
 
-  icontext_set(&c);
+  iatomic_add(&a, 1);
+
+  int r = iatomic_equal(&a, 2);
+
+  iatomic_increment(&a);
+
+  r = iatomic_equal(&a, 3);
 }

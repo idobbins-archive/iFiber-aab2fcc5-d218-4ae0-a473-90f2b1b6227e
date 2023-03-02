@@ -1,5 +1,5 @@
 
-project(iContext LANGUAGES C ASM)
+project(iAtomic LANGUAGES C ASM)
 
 set(CMAKE_ASM_OPTIONS "-x" "assembler-with-cpp")
 
@@ -10,6 +10,7 @@ target_include_directories(${PROJECT_NAME} PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}")
 target_sources(${PROJECT_NAME}
         PRIVATE
 
-        "icontext_set.${CMAKE_HOST_SYSTEM_PROCESSOR}.asm"
-        "icontext_get.${CMAKE_HOST_SYSTEM_PROCESSOR}.asm"
+        "iatomic_add.${CMAKE_HOST_SYSTEM_PROCESSOR}.asm"
+        "iatomic_increment.${CMAKE_HOST_SYSTEM_PROCESSOR}.asm"
+        "iatomic_equal.${CMAKE_HOST_SYSTEM_PROCESSOR}.asm"
         )
