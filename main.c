@@ -3,11 +3,12 @@
 #include <icontext.h>
 #include <istack.h>
 
-#include <stdio.h>
-#include <stdlib.h>
+#include <pthread.h>
 
-static struct icontext base_context;
-static struct icontext fiber_context;
+#include <stdio.h>
+
+static struct icontext base_context = {};
+static struct icontext fiber_context = {};
 
 static struct iatomic exit_condition = {0};
 
@@ -18,31 +19,31 @@ int fib(int n) {
 }
 
 void fiber() {
-  printf("fib(32) = %d", fib(32));
+  printf("fib(32) = %d\n", fib(32));
 
-  exit(0);
+  iatomic_increment(&exit_condition);
+  icontext_load(&base_context);
+}
+
+void thread(){
+
 }
 
 int main() {
 
-    char data[1024];
-    void* sp = istack_get_pointer(data, 1024);
+  char data[1024];
+  void *sp = istack_get_pointer(data, 1024);
 
-    icontext_get(&base_context);
+  fiber_context.return_address = (void*)fiber;
+  fiber_context.stack_pointer = sp;
 
-    printf("hello, world!\n");
+  icontext_save(&base_context);
 
-    if(iatomic_equal(&exit_condition, 0)) {
-        iatomic_increment(&exit_condition);
-        icontext_set(&base_context);
-    }
-//  struct iatomic a = {1};
+  printf("hello, world!\n");
 
-//  iatomic_add(&a, 1);
+  if (iatomic_equal(&exit_condition, 0)) {
+    icontext_load(&fiber_context);
+  }
 
-//  int r = iatomic_equal(&a, 2);
-
-//  iatomic_increment(&a);
-
-//  r = iatomic_equal(&a, 3);
+  printf("goodbye!\n");
 }

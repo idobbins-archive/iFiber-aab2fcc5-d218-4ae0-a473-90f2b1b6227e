@@ -1,6 +1,6 @@
-.global _icontext_set
+.global _icontext_load
 
-_icontext_set:
+_icontext_load:
 
     ; alignment?
 

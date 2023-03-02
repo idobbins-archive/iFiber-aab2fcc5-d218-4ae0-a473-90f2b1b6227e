@@ -1,6 +1,6 @@
-.global _icontext_get
+.global _icontext_save
 
-_icontext_get:
+_icontext_save:
 
     ; alignment?
 
